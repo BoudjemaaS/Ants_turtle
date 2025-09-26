@@ -20,7 +20,7 @@ end
 to new-turtle
   clear-turtles
   create-turtles 1 [
-  setxy -25 + random 51  -25 + random 51
+  setxy (-(coo-x) + (random (2 * coo-x + 1)))  (-(coo-y) + (random (2 * coo-x + 1)))
   set shape "turtle"
   set size 5
   set color green
@@ -50,8 +50,8 @@ end
 to new-patch
     clear-patches
     set reset false
-    set px -25 + random 51
-    set py -25 + random 51
+    set px (-(coo-x) + (random (2 * coo-x + 1)))
+    set py (-(coo-y) + (random (2 * coo-x + 1)))
     ask patch px py [set pcolor red]
 end
 
