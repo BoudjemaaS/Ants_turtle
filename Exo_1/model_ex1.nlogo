@@ -3,7 +3,7 @@ globals[
   coo-y
   mx
   my
-  flag-patch
+
 ]
 
 to clear
@@ -11,7 +11,6 @@ to clear
   set coo-y 25
 
   resize-world ((-1)*(coo-x)) coo-x ((-1)*(coo-y)) coo-y
-  ;clear-turtles
   clear-patches
 
 end
@@ -40,7 +39,7 @@ to new-patch
     ask patch mouse-xcor mouse-ycor [set pcolor new-pcolor]
     set mx mouse-xcor
     set my mouse-ycor
-    set flag-patch true
+
     stop
   ]
 
@@ -54,7 +53,6 @@ end
 
 
 to move-turtle
-  ;if flag-patch = true[
   ask turtles [
 
 
@@ -64,12 +62,9 @@ to move-turtle
       forward 0.1
 
     ]
-      ;[set flag-patch false]
+
 
  ]
- ;tick
-;]
-
 
 end
 @#$#@#$#@
