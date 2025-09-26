@@ -1,103 +1,66 @@
 globals[
   coo-x
   coo-y
-
+  px
+  py
+  prev-x
+  prev-y
   flag-patch
-  target-x
-  target-y
-
-  prev-turtle-x
-  prev-turtle-y
+  reset
 ]
 
 to clear
   set coo-x 25
   set coo-y 25
-
   resize-world ((-1)*(coo-x)) coo-x ((-1)*(coo-y)) coo-y
-  clear-turtles
-  ask patches [set pcolor black]
-
+  ;clear-turtles
+  clear-patches
 end
 
 to new-turtle
-
   clear-turtles
-  set prev-turtle-x (-25 + random 51)
-  set prev-turtle-y (-25 + random 51)
   create-turtles 1 [
-  setxy prev-turtle-x prev-turtle-y
+  setxy -25 + random 51  -25 + random 51
   set shape "turtle"
   set size 5
   set color green
   ]
-
 end
-
-
-to reset-pos-turtle
-  ask turtles[
-    setxy prev-turtle-x prev-turtle-y
-  ]
-end
-
-to pick-up-turtle
-if mouse-down? [
-    ask turtles [setxy mouse-xcor mouse-ycor]
-  ]
-
-end
-
-
-to new-patch
-
-  ask patches [set pcolor black]
-  set target-x (-25 + random 51)
-  set target-y (-25 + random 51)
-  ask patch target-x target-y [set pcolor red]
-  set flag-patch true
-
-end
-
 
 to move-turtle
-  if flag-patch = true[
-  ask turtles [
+   if reset = false[
+     set prev-x xcor
+     set prev-y ycor
+     set reset true
+   ]
 
-    ifelse distancexy  target-x target-y > 0.5[
-      face (patch target-x target-y)
+   face (patch px py)
+  while [distancexy  px py > 0.5][
+      ask patch xcor ycor [set pcolor red]
       forward 0.01
-        ask patch xcor ycor [set pcolor red]
-    ]
-      [set flag-patch false]
-
- ]
- tick
-]
-end
-
-
-to turtle-draw
-
-  if shape-draw = "square"[
-    draw-square
-  ]
-  if shape-draw = "triangle"[
-    draw-triangle
-  ]
-  if shape-draw = "circle"[
-    draw-circle
-  ]
-  if shape-draw = "star"[
-    draw-star
-  ]
+   ]
 
 end
 
+to reset-pos-turtle
+  set xcor prev-x
+  set ycor prev-y
+end
 
-to draw-square
-  ask patches [set pcolor black]
-  ask turtles[
+to new-patch
+    clear-patches
+    set reset false
+    set px -25 + random 51
+    set py -25 + random 51
+    ask patch px py [set pcolor red]
+end
+
+
+
+
+to square
+
+
     face (patch 0 0)
     repeat 4[
       let temp-x xcor
@@ -105,70 +68,70 @@ to draw-square
       right 90
 
       while [distancexy temp-x temp-y < size-shape][
-        forward 0.001
+        forward 0.01
         ask patch xcor ycor [set pcolor red]
       ]
-    ]
+
   ]
 end
 
 
-to draw-triangle
-  ask patches [set pcolor black]
-  ask turtles[
+to triangle
+
+
     face (patch 0 0)
     repeat 3[
       let temp-x xcor
       let temp-y ycor
       right 120
       while [distancexy temp-x temp-y < size-shape][
-        forward 0.001
+        forward 0.01
         ask patch xcor ycor [set pcolor red]
       ]
-    ]
+
   ]
 end
 
-to draw-circle
-  ask patches [set pcolor black]
-  ask turtles[
+to circle
+
+
     face (patch 0 0)
     repeat 36[
       let temp-x xcor
       let temp-y ycor
       right 10
       while [distancexy temp-x temp-y < ((size-shape)/((pi)*(2)))][
-        forward 0.001
+        forward 0.01
         ask patch xcor ycor [set pcolor red]
       ]
-    ]
+
   ]
 end
 
-to draw-star
-  ask patches [set pcolor black]
-  ask turtles[
+to star
+
+
     face (patch 0 0)
     repeat 5[
       let temp-x xcor
       let temp-y ycor
       right 144
       while [distancexy temp-x temp-y < size-shape][
-        forward 0.001
+        forward 0.01
         ask patch xcor ycor [set pcolor red]
       ]
-    ]
+
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-97
-33
-870
-807
+167
+84
+838
+756
 -1
 -1
-15.0
+13.0
 1
 10
 1
@@ -189,10 +152,10 @@ ticks
 30.0
 
 BUTTON
-898
-47
-976
-80
+875
+113
+938
+146
 NIL
 clear
 NIL
@@ -206,10 +169,10 @@ NIL
 1
 
 BUTTON
-899
-93
-988
-126
+877
+168
+969
+201
 NIL
 new-turtle
 NIL
@@ -223,10 +186,10 @@ NIL
 1
 
 BUTTON
-899
-139
-989
-172
+876
+225
+966
+258
 NIL
 new-patch
 NIL
@@ -240,16 +203,16 @@ NIL
 1
 
 BUTTON
-1116
-95
-1212
-128
+987
+168
+1083
+201
 NIL
 move-turtle
-T
+NIL
 1
 T
-OBSERVER
+TURTLE
 NIL
 NIL
 NIL
@@ -257,16 +220,16 @@ NIL
 1
 
 BUTTON
-1222
-96
-1341
-129
+1097
+168
+1216
+201
 NIL
 reset-pos-turtle
 NIL
 1
 T
-OBSERVER
+TURTLE
 NIL
 NIL
 NIL
@@ -274,43 +237,16 @@ NIL
 1
 
 BUTTON
-1001
-96
-1106
-129
+880
+359
+950
+392
 NIL
-pick-up-turtle
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-CHOOSER
-895
-206
-1033
-251
-shape-draw
-shape-draw
-"square" "triangle" "circle" "star"
-3
-
-BUTTON
-1184
-207
-1278
-240
-NIL
-turtle-draw
+square
 NIL
 1
 T
-OBSERVER
+TURTLE
 NIL
 NIL
 NIL
@@ -318,15 +254,66 @@ NIL
 1
 
 INPUTBOX
-1039
-207
-1177
-267
+878
+292
+1033
+352
 size-shape
-15.0
+10.0
 1
 0
 Number
+
+BUTTON
+880
+396
+943
+429
+NIL
+circle
+NIL
+1
+T
+TURTLE
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+957
+360
+1030
+393
+NIL
+triangle
+NIL
+1
+T
+TURTLE
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+958
+397
+1021
+430
+NIL
+star\n
+NIL
+1
+T
+TURTLE
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?

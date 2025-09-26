@@ -1,94 +1,149 @@
 globals[
   coo-x
   coo-y
-  mx
-  my
+  px
+  py
+  prev-x
+  prev-y
   flag-patch
+  reset
 ]
 
 to clear
   set coo-x 25
   set coo-y 25
-
   resize-world ((-1)*(coo-x)) coo-x ((-1)*(coo-y)) coo-y
   ;clear-turtles
   clear-patches
-
 end
 
 to new-turtle
   clear-turtles
   create-turtles 1 [
-    setxy 0 0
-    set shape "turtle"
-    set size 5
-    set color white
+  setxy -25 + random 51  -25 + random 51
+  set shape "turtle"
+  set size 5
+  set color green
   ]
-
 end
 
-to yellow-turtle
-  ask turtles[
-  set color yellow
+to move-turtle
+  ask turtles [
+   if reset = false[
+     set prev-x xcor
+     set prev-y ycor
+     set reset true
+    ]
+
+
+   face (patch px py)
+  while [distancexy  px py > 0.5][
+      ask patch xcor ycor [set pcolor red]
+      forward 0.01
+   ]
+   ]
+end
+
+to reset-pos-turtle
+  ask turtles [
+  set xcor prev-x
+  set ycor prev-y
   ]
 end
 
 to new-patch
-
-  if mouse-down? [
     clear-patches
-    ask patch mouse-xcor mouse-ycor [set pcolor new-pcolor]
-    set mx mouse-xcor
-    set my mouse-ycor
-    set flag-patch true
-    stop
-  ]
-
+    set reset false
+    set px -25 + random 51
+    set py -25 + random 51
+    ask patch px py [set pcolor red]
 end
 
 
-to yellow-patch
-  ask patch mx my [set pcolor yellow]
-
-end
 
 
-to move-turtle
-  ;if flag-patch = true[
-  ask turtles [
+to square
 
+   ask turtles [
+    face (patch 0 0)
+    repeat 4[
+      let temp-x xcor
+      let temp-y ycor
+      right 90
 
-    while [distancexy  mx my >= 1][
-      show distancexy  mx my
-      face (patch mx my)
-      forward 0.1
-
+      while [distancexy temp-x temp-y < size-shape][
+        forward 0.01
+        ask patch xcor ycor [set pcolor red]
+      ]
     ]
-      ;[set flag-patch false]
-
- ]
- ;tick
-;]
+  ]
+end
 
 
+to triangle
+
+    ask turtles [
+    face (patch 0 0)
+    repeat 3[
+      let temp-x xcor
+      let temp-y ycor
+      right 120
+      while [distancexy temp-x temp-y < size-shape][
+        forward 0.01
+        ask patch xcor ycor [set pcolor red]
+      ]
+    ]
+  ]
+end
+
+to circle
+
+  ask turtles[
+    face (patch 0 0)
+    repeat 36[
+      let temp-x xcor
+      let temp-y ycor
+      right 10
+      while [distancexy temp-x temp-y < ((size-shape)/((pi)*(2)))][
+        forward 0.01
+        ask patch xcor ycor [set pcolor red]
+      ]
+    ]
+  ]
+end
+
+to star
+
+  ask turtles [
+    face (patch 0 0)
+    repeat 5[
+      let temp-x xcor
+      let temp-y ycor
+      right 144
+      while [distancexy temp-x temp-y < size-shape][
+        forward 0.01
+        ask patch xcor ycor [set pcolor red]
+      ]
+    ]
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-881
-682
+97
+33
+870
+807
 -1
 -1
-13.0
+15.0
 1
 10
 1
 1
 1
 0
-0
-0
+1
+1
 1
 -25
 25
@@ -135,30 +190,13 @@ NIL
 1
 
 BUTTON
-998
-92
-1099
-125
-NIL
-yellow-turtle
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-1046
-149
-1136
-182
+899
+139
+989
+172
 NIL
 new-patch
-T
+NIL
 1
 T
 OBSERVER
@@ -169,10 +207,106 @@ NIL
 1
 
 BUTTON
-1107
-93
-1203
-126
+1097
+91
+1216
+124
+NIL
+reset-pos-turtle
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+INPUTBOX
+906
+199
+1044
+259
+size-shape
+15.0
+1
+0
+Number
+
+BUTTON
+907
+269
+977
+302
+NIL
+square
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+986
+309
+1049
+342
+NIL
+circle
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+905
+310
+978
+343
+NIL
+triangle
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+986
+269
+1049
+302
+NIL
+star
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+995
+92
+1091
+125
 NIL
 move-turtle
 NIL
@@ -183,43 +317,6 @@ NIL
 NIL
 NIL
 NIL
-1
-
-BUTTON
-1144
-149
-1246
-182
-NIL
-yellow-patch
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-CHOOSER
-898
-142
-1036
-187
-new-pcolor
-new-pcolor
-55 15 9.9 135 105
-1
-
-TEXTBOX
-981
-194
-1053
-264
-55 = green\n15 = red\n9.9 = white\n135 = pink\n105 = blue
-11
-0.0
 1
 
 @#$#@#$#@
