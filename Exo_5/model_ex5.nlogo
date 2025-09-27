@@ -1,32 +1,34 @@
-global[
+globals [
   coo-x
   coo-y
+  nb-t
 ]
 
 to setup
-
+  clear-all
+  set nb-t 0
   set coo-x 25
   set coo-y 25
   resize-world ((-1)*(coo-x)) coo-x ((-1)*(coo-y)) coo-y
-  clear-all
   create-turtles 30[
     set color white
-    face patch 12 12
+    face patch (coo-x / 2) (coo-y / 2)
   ]
 
 end
 
-to move
 
-  ifelse random 2 = 0[
-     set color red
-     left angle-var-1
-     forward step-var-1
-  ]
-  [
-    set color blue
-    right angle-var-2
-    forward step-var-2
+to random-walk
+  set nb-t nb-t + 1
+  left random 361
+  forward random sqrt (coo-x ^ 2 + coo-y ^ 2)
+  show  (nb-t)
+
+end
+
+to random-repeat
+  repeat number-repeat [
+      random-walk
   ]
 
 end
@@ -76,12 +78,12 @@ NIL
 1
 
 BUTTON
-933
-174
-996
-207
+928
+157
+1030
+190
 NIL
-move
+random-walk
 T
 1
 T
@@ -92,65 +94,33 @@ NIL
 NIL
 1
 
-SLIDER
-929
-227
-1101
-260
-angle-var-1
-angle-var-1
-0
-360
-147.0
-1
-1
+BUTTON
+993
+212
+1107
+245
 NIL
-HORIZONTAL
+random-repeat
+NIL
+1
+T
+TURTLE
+NIL
+NIL
+NIL
+NIL
+1
 
-SLIDER
-1108
-226
-1280
-259
-step-var-1
-step-var-1
+INPUTBOX
+906
+212
+991
+272
+number-repeat
+10.0
+1
 0
-100
-18.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-929
-297
-1101
-330
-angle-var-2
-angle-var-2
-0
-360
-68.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-1108
-298
-1280
-331
-step-var-2
-step-var-2
-0
-100
-8.0
-1
-1
-NIL
-HORIZONTAL
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
