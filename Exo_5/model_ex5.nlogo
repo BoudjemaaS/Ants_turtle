@@ -1,34 +1,43 @@
 globals [
   coo-x
   coo-y
-  nb-t
+  nb-mouv
 ]
 
 to setup
   clear-all
-  set nb-t 0
+  set nb-mouv 0
   set coo-x 25
   set coo-y 25
   resize-world ((-1)*(coo-x)) coo-x ((-1)*(coo-y)) coo-y
   create-turtles 30[
     set color white
-    face patch (coo-x / 2) (coo-y / 2)
+    face patch 0 coo-y
   ]
 
 end
 
 
 to random-walk
-  set nb-t nb-t + 1
+  set nb-mouv nb-mouv + 1
   left random 361
   forward random sqrt (coo-x ^ 2 + coo-y ^ 2)
-  show  (nb-t)
+
 
 end
 
 to random-repeat
   repeat number-repeat [
       random-walk
+  ]
+
+end
+
+to loop-random-walk
+
+  loop[
+    random-walk
+    if nb-mouv >= 30 * number-repeat [stop]
   ]
 
 end
@@ -61,10 +70,10 @@ ticks
 30.0
 
 BUTTON
-929
-114
-992
-147
+906
+131
+969
+164
 NIL
 setup
 NIL
@@ -78,10 +87,10 @@ NIL
 1
 
 BUTTON
-928
-157
-1030
-190
+905
+172
+1007
+205
 NIL
 random-walk
 T
@@ -121,6 +130,23 @@ number-repeat
 1
 0
 Number
+
+BUTTON
+1111
+214
+1240
+247
+NIL
+loop-random-walk
+NIL
+1
+T
+TURTLE
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
