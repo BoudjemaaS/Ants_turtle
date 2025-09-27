@@ -199,6 +199,41 @@ tour-max
 0
 Number
 
+PLOT
+943
+229
+1143
+379
+Nb patches to collect
+tours
+count patches with [pcolor = yellow]
+0.0
+10.0
+0.0
+40.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count patches with [pcolor = yellow ]"
+
+BUTTON
+1253
+257
+1319
+290
+NIL
+ticking
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
 @#$#@#$#@
 ## WHAT IS IT?
 
