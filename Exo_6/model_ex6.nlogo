@@ -2,6 +2,8 @@ globals [
 coo-x
 coo-y
 tours
+nb-yellow
+
 ]
 
 turtles-own [
@@ -12,11 +14,13 @@ turtles-own [
 to setup
   clear-all
   reset-ticks
+  set nb-yellow 0
   set tours 0
   set coo-x 25
   set coo-y 25
   resize-world ((-1)*(coo-x)) coo-x ((-1)*(coo-y)) coo-y
   create-turtles nb-termites[
+    set shape "bug"
     set color red
     set nb-tour 0
   ]
@@ -27,9 +31,9 @@ to ticking
 tick
 end
 
-to do-plot
-clear-plot
-  plotxy tours count patches with [pcolor = yellow]
+to do-show
+
+  show  (list tours count patches with [pcolor = yellow])
 
 end
 
@@ -64,11 +68,11 @@ to wiggle
 end
 
 to search-for-pellet
-  do-plot
-  ask turtle 1 [set tours nb-tour]
+  do-show
+  set tours tours + 1
   if nb-tour < tour-max[
     while [pcolor != yellow] [wiggle]
-    show nb-tour
+    ;show nb-tour
     set pcolor black
     find-new-pile
     get-away
@@ -119,8 +123,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -25
 25
@@ -172,10 +176,10 @@ NIL
 1
 
 BUTTON
-883
-28
-946
-61
+893
+41
+956
+74
 NIL
 setup
 NIL
@@ -194,10 +198,28 @@ INPUTBOX
 1452
 142
 tour-max
-20.0
+40.0
 1
 0
 Number
+
+PLOT
+943
+252
+1143
+402
+yellow patches
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+false
+false
+"" "plot count patches with [pcolor = yellow]"
+PENS
+"default" 1.0 0 -16777216 true "" ""
 
 @#$#@#$#@
 ## WHAT IS IT?
