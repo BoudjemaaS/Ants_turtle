@@ -27,13 +27,11 @@ to setup
 end
 
 
-to ticking
-tick
-end
+
 
 to do-show
 
-  show  (list tours count patches with [pcolor = yellow])
+  show  (list nb-tour tours count patches with [pcolor = yellow])
 
 end
 
@@ -44,6 +42,24 @@ to go
  search-for-pellet
 
 end
+
+to recolor-patch
+
+  let piled patches with [
+      (pcolor = yellow or pcolor = green) and
+      (count neighbors4 with [pcolor = yellow or pcolor = green] >= 2 or
+      (count neighbors4 with [(pcolor = yellow or pcolor = green) and count neighbors4 with [pcolor = yellow or pcolor = green] >= 2] >= 1 ))
+
+      ]
+
+
+    ask patches with [pcolor = green and not member? self piled] [set pcolor yellow]
+    ask piled [set pcolor green]
+
+end
+
+
+
 
 
 to patch-setup
@@ -63,26 +79,39 @@ to wiggle
   forward 1
   right random 360
 
-
-
 end
 
 to search-for-pellet
-  do-show
-  set tours tours + 1
+  ;do-show
+
   if nb-tour < tour-max[
-    while [pcolor != yellow] [wiggle]
-    ;show nb-tour
+    while [pcolor != yellow and pcolor != green] [wiggle]
+
+    set tours tours + 1
+    do-plot
     set pcolor black
+    recolor-patch
     find-new-pile
     get-away
     set nb-tour nb-tour + 1
     search-for-pellet
   ]
 
+end
 
+to do-plot
+
+  set-current-plot "nb piled patches"
+
+  set-current-plot-pen "green"
+  plotxy tours count patches with [pcolor = green]
+
+  set-current-plot-pen "yellow"
+  plotxy tours count patches with [pcolor = yellow]
 
 end
+
+
 
 
 to get-away
@@ -94,7 +123,7 @@ end
 to find-new-pile
 
   set color blue
-  let target one-of patches with [pcolor = yellow and any? neighbors with [pcolor = black]]
+  let target one-of patches with [(pcolor = yellow or pcolor = green) and any? neighbors with [pcolor = black]]
   if target != nobody[
     face target
     while [distance target > 1][
@@ -105,7 +134,17 @@ to find-new-pile
       let n one-of neighbors with [pcolor = black]
       if n != nobody [ask n [set pcolor yellow]]
     ]
+    recolor-patch
   ]
+
+end
+
+to stats
+
+
+
+
+
 end
 
 @#$#@#$#@
@@ -159,10 +198,10 @@ nb-patches
 Number
 
 BUTTON
-892
-150
-955
-183
+893
+154
+956
+187
 NIL
 go
 NIL
@@ -198,28 +237,29 @@ INPUTBOX
 1452
 142
 tour-max
-40.0
+20.0
 1
 0
 Number
 
 PLOT
-943
-252
-1143
-402
-yellow patches
-nb-yellow
+891
+197
+1455
+347
+nb piled patches
 tours
+nb piled patch
 0.0
 10.0
 0.0
 10.0
+true
 false
-false
-"clear-plot\n" "plotxy nb-yellow tours"
+"" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plotxy nb-yellow tours"
+"green" 1.0 0 -13840069 true "" ""
+"yellow" 1.0 0 -7500403 true "" ""
 
 @#$#@#$#@
 ## WHAT IS IT?
