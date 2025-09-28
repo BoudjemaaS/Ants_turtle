@@ -2,19 +2,18 @@ globals [
 coo-x
 coo-y
 tours
-nb-yellow
-
+nb-tour-max
 ]
 
 turtles-own [
   nb-tour
 ]
 
-
 to setup
+
   clear-all
+  set nb-tour-max tour-max
   reset-ticks
-  set nb-yellow 0
   set tours 0
   set coo-x 25
   set coo-y 25
@@ -24,14 +23,6 @@ to setup
     set color red
     set nb-tour 0
   ]
-end
-
-
-
-
-to do-show
-
-  show  (list nb-tour tours count patches with [pcolor = yellow])
 
 end
 
@@ -43,15 +34,14 @@ to go
 
 end
 
+
 to recolor-patch
 
   let piled patches with [
       (pcolor = yellow or pcolor = green) and
       (count neighbors4 with [pcolor = yellow or pcolor = green] >= 2 or
       (count neighbors4 with [(pcolor = yellow or pcolor = green) and count neighbors4 with [pcolor = yellow or pcolor = green] >= 2] >= 1 ))
-
       ]
-
 
     ask patches with [pcolor = green and not member? self piled] [set pcolor yellow]
     ask piled [set pcolor green]
@@ -59,20 +49,17 @@ to recolor-patch
 end
 
 
-
-
-
 to patch-setup
+  ask patches with [pcolor != black][set pcolor black]
 
   while [nb-patches > count patches with [pcolor = yellow ]][
     let xp (- coo-x + random coo-x * 2 + 1)
     let xy (- coo-y + random coo-y * 2 + 1)
 
     ask patch xp xy [set pcolor yellow]
-
-
   ]
 end
+
 
 to wiggle
 
@@ -82,9 +69,8 @@ to wiggle
 end
 
 to search-for-pellet
-  ;do-show
 
-  if nb-tour < tour-max[
+  if nb-tour < nb-tour-max[
     while [pcolor != yellow and pcolor != green] [wiggle]
 
     set tours tours + 1
@@ -99,19 +85,27 @@ to search-for-pellet
 
 end
 
+
 to do-plot
 
-  set-current-plot "nb piled patches"
+  set-current-plot "patches organization"
 
-  set-current-plot-pen "green"
+  set-current-plot-pen "piled"
   plotxy tours count patches with [pcolor = green]
 
-  set-current-plot-pen "yellow"
+  set-current-plot-pen "not piled"
   plotxy tours count patches with [pcolor = yellow]
 
+
+  set-current-plot "termites activity"
+
+  set-current-plot-pen "looking for pellet"
+  plotxy tours count turtles with [color = yellow]
+
+  set-current-plot-pen "carrying pellet"
+  plotxy tours count turtles  with [color = blue]
+
 end
-
-
 
 
 to get-away
@@ -119,6 +113,7 @@ to get-away
   face patch (- xcor) (- ycor)
   forward 5
 end
+
 
 to find-new-pile
 
@@ -139,13 +134,6 @@ to find-new-pile
 
 end
 
-to stats
-
-
-
-
-
-end
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -237,7 +225,7 @@ INPUTBOX
 1452
 142
 tour-max
-20.0
+50.0
 1
 0
 Number
@@ -247,19 +235,38 @@ PLOT
 197
 1455
 347
-nb piled patches
+patches organization
 tours
-nb piled patch
+nb patches
 0.0
 10.0
 0.0
 10.0
 true
+true
+"" ""
+PENS
+"piled" 1.0 0 -13840069 true "" ""
+"not piled" 1.0 0 -7500403 true "" ""
+
+PLOT
+890
+358
+1456
+508
+termites activity
+tour
+nb termites
+0.0
+10.0
+0.0
+1.0
+true
 false
 "" ""
 PENS
-"green" 1.0 0 -13840069 true "" ""
-"yellow" 1.0 0 -7500403 true "" ""
+"looking for pellet" 1.0 0 -1184463 true "" ""
+"carrying pellet" 1.0 0 -13345367 true "" ""
 
 @#$#@#$#@
 ## WHAT IS IT?
